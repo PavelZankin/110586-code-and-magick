@@ -1,36 +1,38 @@
-function sum(array){
-	var arraySum = 0;
+function getArrayElementsSum(array){
+	var sum = 0;
+	var i = 0;
     for(var i = 0; i < array.length; i++){
-        arraySum += array[i];
+        sum += array[i];
         }
-    	return arraySum;
+    	return sum;
 }
 
-function length(array1, array2){
-	var arrayProd = 0;
+function getSumOfMultiplingArrays(array1, array2){
+	var length = 0;
+	var i = 0;
 	for(var i = 0; i < array1.length && i < array2.length; i++) {
-			arrayProd += array1[i] * array2[i];
+			length += array1[i] * array2[i];
 		}
-		return arrayProd;	
+		return length;	
 }
 
 function getMessage(a, b) {
 	
 	if (typeof a == "boolean") {
 		if (a) {
-			return "Я попал в [" + b + "]";
+			return "Я попал в " + b;
 		}
 		else {
 			return "Я никуда не попал";
 		}
 	}
 	 else if (typeof a == "number") {
-		return "Я прыгнул на [" + a * 100 + "] сантиметров";
+		return "Я прыгнул на " + a * 100 + " сантиметров";
 	}
 	 else if (typeof a == "object" && typeof b !== "object") {
-		return "Я прошёл [" + sum(a) + "] шагов";
+		return "Я прошёл " + getArrayElementsSum(a) + " шагов";
 	} 
 	else if (typeof a == "object" && typeof b == "object") {		
-		return "Я прошёл [" + length(a, b) +"] метров";
+		return "Я прошёл " + getSumOfMultiplingArrays(a, b) +" метров";
 	}
 }
