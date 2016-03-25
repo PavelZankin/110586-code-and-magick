@@ -1,19 +1,19 @@
 function getArrayElementsSum(array){
 	var sum = 0;
 	var i = 0;
-    for(var i = 0; i < array.length; i++){
+    for(i = 0; i < array.length; i++){
         sum += array[i];
         }
     	return sum;
 }
 
 function getSumOfMultiplingArrays(array1, array2){
-	var length = 0;
+	var result = 0;
 	var i = 0;
-	for(var i = 0; i < array1.length && i < array2.length; i++) {
-			length += array1[i] * array2[i];
+	for(i = 0; i < array1.length && i < array2.length; i++) {
+			result += array1[i] * array2[i];
 		}
-		return length;	
+		return result;	
 }
 
 function getMessage(a, b) {
