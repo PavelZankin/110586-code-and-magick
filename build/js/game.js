@@ -1,5 +1,57 @@
 'use strict';
 
+/* Домашнее задание */
+
+/* Функция принимающая текст и возвращающая колличество строк, фиксированные по ширине,
+получившиеся из него*/
+function getTextLines(game, text, maxWidth) {
+  var words = text.split(' ');
+  var lines = [];
+  var line = '';
+  for (var i = 0; i < words.length; ++i) {
+    var testLine = line + words[i] + ' ';
+    var testWidth = game.ctx.measureText(testLine).width;
+    if (testWidth > maxWidth) {
+      lines.push(line);
+      line = words[i] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+  return lines;
+}
+
+/*Обрисовка текста в canvas с переходом на новую строчку*/
+function drawText(game, x, y, lineHeight, lines) {
+  for (var i = 0; i < lines.length; ++i) {
+    game.ctx.fillText(lines[i], x, y);
+    y += lineHeight;
+  }
+}
+
+/*Обрисовка диалогового окна, с текстом, меняющегося по высоте
+ в зависимости от кол-ва строк текста, преследующее волшебника*/
+function drawTextBox(game, text) {
+  var x = game.state.objects[0].x; // левый край волшебника
+  var y = game.state.objects[0].y; // верхний край
+  var w = game.state.objects[0].width; // ширина волшебника
+  var h = game.state.objects[0].height; // высота
+
+  var maxWidth = 290;
+  var lineHeight = 30;
+  game.ctx.font = '30px PT Mono';
+  var lines = getTextLines(game, text, maxWidth);
+
+  game.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  game.ctx.fillRect(x + w + 10, y + h - 190, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillStyle = '#FFFFFF';
+  game.ctx.fillRect(x + w, y + h - 200, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillStyle = '#000000';
+
+  drawText(game, x + w + 15, y + h - 170, lineHeight, lines);
+}
+
 (function() {
   /**
    * @const
@@ -380,16 +432,16 @@
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          drawTextBox(this, 'Пресвятые хоббитсы, я попал! ПОПАЛ!! ПОПААААЛ!!');
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          drawTextBox(this, 'Ааа, как обычно...');
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          drawTextBox(this, 'Пауза в игре! Надо передохнуть...');
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          drawTextBox(this, 'Тебя приветствует маг и волшебник, Пендальф синий! Нажми пробел.');
           break;
       }
     },
@@ -685,3 +737,4 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 })();
+
