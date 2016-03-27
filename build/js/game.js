@@ -40,7 +40,7 @@ function drawTextBox(game, text) {
 
   var maxWidth = 290;
   var lineHeight = 30;
-  game.ctx.font = '30px PT Mono';
+  game.ctx.font = '16px PT Mono';
   var lines = getTextLines(game, text, maxWidth);
 
   game.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -438,10 +438,10 @@ function drawTextBox(game, text) {
           drawTextBox(this, 'Ааа, как обычно...');
           break;
         case Verdict.PAUSE:
-          drawTextBox(this, 'Пауза в игре! Надо передохнуть...');
+          drawTextBox(this, 'Пауза в игре! Передохну...');
           break;
         case Verdict.INTRO:
-          drawTextBox(this, 'Тебя приветствует маг и волшебник, Пендальф синий! Нажми пробел.');
+          drawTextBox(this, 'Тебя приветствует волшебник, Пендальф синий, повелитель драконов, низвергатель богов, в общем скромный парнишка! Хочешь поиграть со мной? Нажми пробел.');
           break;
       }
     },
