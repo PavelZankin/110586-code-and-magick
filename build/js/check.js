@@ -1,28 +1,38 @@
+function getArrayElementsSum(array){
+	var sum = 0;
+	var i = 0;
+    for(i = 0; i < array.length; i++){
+        sum += array[i];
+        }
+    	return sum;
+}
+
+function getSumOfMultiplingArrays(array1, array2){
+	var result = 0;
+	var i = 0;
+	for(i = 0; i < array1.length && i < array2.length; i++) {
+			result += array1[i] * array2[i];
+		}
+		return result;	
+}
+
 function getMessage(a, b) {
 	
 	if (typeof a == "boolean") {
 		if (a) {
-			return "я попал в [" + b + "]";
+			return "Я попал в " + b;
 		}
 		else {
-			return "я никуда не попал";
+			return "Я никуда не попал";
 		}
 	}
 	 else if (typeof a == "number") {
-		return "Я прыгнул на [" + a * 100 + "] сантиметров";
+		return "Я прыгнул на " + a * 100 + " сантиметров";
 	}
 	 else if (typeof a == "object" && typeof b !== "object") {
-		var sum = 0;
-		for(var i = 0; i < a.length; i++) {
-			sum += a[i];
-		}
-		return "Я прошёл [" + sum + "] шагов";
+		return "Я прошёл " + getArrayElementsSum(a) + " шагов";
 	} 
-	else if (typeof a == "object" && typeof b == "object") {
-		var length = 0;
-		for(var i = 0; i < a.length && i < b.length; i++) {
-			length += a[i] * b[i];
-		}		
-		return "Я прошёл [" + length +"] метров";
+	else if (typeof a == "object" && typeof b == "object") {		
+		return "Я прошёл " + getSumOfMultiplingArrays(a, b) +" метров";
 	}
 }
