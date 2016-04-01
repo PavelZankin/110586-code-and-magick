@@ -1,5 +1,5 @@
 'use strict';
-/*функция делающая поле с отзывом обязательным при оценке меньше 4,
+/*функция делающая поле с отзывом обязательным при оценке меньше 3,
 которая прячет линки при заполнении полей и не дает нажать кнопку "отправить отзыв",
 при пустых обязательных полях*/
 function validate(mark) {
@@ -7,8 +7,9 @@ function validate(mark) {
   var name = document.querySelector('#review-name');
   var text = document.querySelector('#review-text');
 
+
   if (mark !== null) {
-    if (mark.value > 3) {
+    if (mark.value >= 3) {
       text.required = false;
     } else {
       text.required = true;
@@ -30,17 +31,9 @@ function validate(mark) {
     labelBlock.style.visibility = 'hidden';
   }
 
-  if (isNameInvalid) {
-    labelName.hidden = false;
-  } else {
-    labelName.hidden = true;
-  }
+  labelName.hidden = !(isNameInvalid);
 
-  if (isTextInvalid) {
-    labelText.hidden = false;
-  } else {
-    labelText.hidden = true;
-  }
+  labelText.hidden = !(isTextInvalid);
 }
 
 // Эта функция присутствовала
@@ -59,6 +52,14 @@ function validate(mark) {
     formContainer.classList.add('invisible');
   };
   // конец кода который был
+
+  var marks = formContainer.querySelectorAll('input[name="review-mark"]');
+  for (var i = 0; i < marks.length; i++) {
+    marks[i].onclick = function() {
+      validate(this);
+    };
+  }
+
   var button = document.querySelector('.review-submit');
   button.disabled = true;
 
@@ -74,24 +75,6 @@ function validate(mark) {
     validate(null);
   };
 
-  var mark1 = document.querySelector('#review-mark-1');
-  mark1.onclick = function() {
-    validate(mark1);
-  };
-  var mark2 = document.querySelector('#review-mark-2');
-  mark2.onclick = function() {
-    validate(mark2);
-  };
-  var mark3 = document.querySelector('#review-mark-3');
-  mark3.onclick = function() {
-    validate(mark3);
-  };
-  var mark4 = document.querySelector('#review-mark-4');
-  mark4.onclick = function() {
-    validate(mark4);
-  };
-  var mark5 = document.querySelector('#review-mark-5');
-  mark5.onclick = function() {
-    validate(mark5);
-  };
+  var checkedMark = formContainer.querySelector('input[name="review-mark"][checked]');
+  validate(checkedMark);
 })();
