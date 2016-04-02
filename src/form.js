@@ -7,7 +7,6 @@ function validate(mark) {
   var name = document.querySelector('#review-name');
   var text = document.querySelector('#review-text');
 
-
   if (mark !== null) {
     if (mark.value >= 3) {
       text.required = false;
@@ -36,8 +35,9 @@ function validate(mark) {
   labelText.hidden = !(isTextInvalid);
 }
 
-// Эта функция присутствовала
 (function() {
+  var browserCookies = require('browser-cookies');
+
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
@@ -51,11 +51,15 @@ function validate(mark) {
     evt.preventDefault();
     formContainer.classList.add('invisible');
   };
-  // конец кода который был
 
   var marks = formContainer.querySelectorAll('input[name="review-mark"]');
-  for (var i = 0; i < marks.length; i++) {
+  marks.value = browserCookies.get('mark') || marks.value;
+  var i = 0;
+  for (i = 0; i < marks.length; i++) {
     marks[i].onclick = function() {
+      var prev = formContainer.querySelector('input[name="review-mark"][checked]');
+      prev.removeAttribute('checked');
+      this.setAttribute('checked', null);
       validate(this);
     };
   }
@@ -64,6 +68,7 @@ function validate(mark) {
   button.disabled = true;
 
   var name = document.querySelector('#review-name');
+  name.value = browserCookies.get('name') || name.value;
   name.required = true;
   name.oninput = function() {
     validate(null);
@@ -77,4 +82,32 @@ function validate(mark) {
 
   var checkedMark = formContainer.querySelector('input[name="review-mark"][checked]');
   validate(checkedMark);
+
+  //cookies
+  var form = formContainer.querySelector('form');
+  form.onsubmit = function(evt) {
+    evt.preventDefault();
+    var dateNow = new Date();
+    var dateBirthday = new Date(dateNow.getFullYear(), 0, 20);
+    var oneYear = 1000 * 60 * 60 * 24 * 365;
+    var dateDifferent = 0;
+    // на случай если День рождения будет меняться.
+    if (dateBirthday > dateNow) {
+      dateDifferent = (oneYear - (dateBirthday.valueOf() - dateNow.valueOf()));
+    } else if (dateBirthday < dateNow) {
+      dateDifferent = dateNow.valueOf() - dateBirthday.valueOf();
+    } else {
+      dateDifferent = oneYear;
+    }
+
+    var dateToExpire = new Date(dateNow.valueOf() + dateDifferent);
+    var formattedDateToExpire = { expires: dateToExpire.toUTCString() };
+
+    browserCookies.set('name', name.value, formattedDateToExpire);
+
+    var mark = document.querySelector('input[name="review-mark"][checked]');
+    browserCookies.set('mark', mark.value, formattedDateToExpire);
+
+    form.submit();
+  };
 })();
