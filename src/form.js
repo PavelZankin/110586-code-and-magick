@@ -53,7 +53,6 @@ function validate(mark) {
   };
 
   var marks = formContainer.querySelectorAll('input[name="review-mark"]');
-  marks.value = browserCookies.get('mark') || marks.value;
   var i = 0;
   for (i = 0; i < marks.length; i++) {
     marks[i].onclick = function() {
@@ -79,9 +78,12 @@ function validate(mark) {
   text.oninput = function() {
     validate(null);
   };
-
-  var checkedMark = formContainer.querySelector('input[name="review-mark"][checked]');
-  validate(checkedMark);
+  //меняем атрибуты checked у оценок по значению cookies
+  var oldCheckedMark = formContainer.querySelector('input[name="review-mark"][checked]');
+  oldCheckedMark.removeAttribute('checked');
+  var newCheckedMark = formContainer.querySelector('input[name="review-mark"][value="' + browserCookies.get('mark') + '"]');
+  newCheckedMark.setAttribute('checked', null);
+  validate(newCheckedMark);
 
   //cookies
   var form = formContainer.querySelector('form');
@@ -91,7 +93,7 @@ function validate(mark) {
     var dateBirthday = new Date(dateNow.getFullYear(), 0, 20);
     var oneYear = 1000 * 60 * 60 * 24 * 365;
     var dateDifferent = 0;
-    // на случай если День рождения будет меняться.
+
     if (dateBirthday > dateNow) {
       dateDifferent = (oneYear - (dateBirthday.valueOf() - dateNow.valueOf()));
     } else if (dateBirthday < dateNow) {
