@@ -80,9 +80,15 @@ function validate(mark) {
   };
   //меняем атрибуты checked у оценок по значению cookies
   var oldCheckedMark = formContainer.querySelector('input[name="review-mark"][checked]');
-  oldCheckedMark.removeAttribute('checked');
-  var newCheckedMark = formContainer.querySelector('input[name="review-mark"][value="' + browserCookies.get('mark') + '"]');
-  newCheckedMark.setAttribute('checked', null);
+  var newCheckedMark = oldCheckedMark;
+
+  var savedMark = browserCookies.get('mark');
+  if (savedMark !== null) {
+    oldCheckedMark.removeAttribute('checked');
+    newCheckedMark = formContainer.querySelector('input[name="review-mark"][value="' + savedMark + '"]');
+    newCheckedMark.setAttribute('checked', null);
+  }
+
   validate(newCheckedMark);
 
   //cookies
