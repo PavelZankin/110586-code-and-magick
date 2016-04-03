@@ -98,12 +98,12 @@ function validate(mark) {
     var dateNow = new Date();
     var dateBirthday = new Date(dateNow.getFullYear(), 0, 20);
     var oneYear = 1000 * 60 * 60 * 24 * 365;
-    var dateDifferent = 0;
+    var dateDifferent = dateBirthday.valueOf() - dateNow.valueOf();
 
-    if (dateBirthday > dateNow) {
-      dateDifferent = (oneYear - (dateBirthday.valueOf() - dateNow.valueOf()));
-    } else if (dateBirthday < dateNow) {
-      dateDifferent = dateNow.valueOf() - dateBirthday.valueOf();
+    if (dateDifferent > 0) {
+      dateDifferent = oneYear - dateDifferent;
+    } else if (dateDifferent < 0) {
+      dateDifferent = dateDifferent * -1;
     } else {
       dateDifferent = oneYear;
     }
