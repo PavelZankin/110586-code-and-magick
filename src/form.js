@@ -7,7 +7,6 @@ function validate(mark) {
   var name = document.querySelector('#review-name');
   var text = document.querySelector('#review-text');
 
-
   if (mark !== null) {
     if (mark.value >= 3) {
       text.required = false;
@@ -36,8 +35,9 @@ function validate(mark) {
   labelText.hidden = !(isTextInvalid);
 }
 
-// Эта функция присутствовала
 (function() {
+  var browserCookies = require('browser-cookies');
+
   var formContainer = document.querySelector('.overlay-container');
   var formOpenButton = document.querySelector('.reviews-controls-new');
   var formCloseButton = document.querySelector('.review-form-close');
@@ -51,11 +51,14 @@ function validate(mark) {
     evt.preventDefault();
     formContainer.classList.add('invisible');
   };
-  // конец кода который был
 
   var marks = formContainer.querySelectorAll('input[name="review-mark"]');
-  for (var i = 0; i < marks.length; i++) {
+  var i = 0;
+  for (i = 0; i < marks.length; i++) {
     marks[i].onclick = function() {
+      var prev = formContainer.querySelector('input[name="review-mark"][checked]');
+      prev.removeAttribute('checked');
+      this.setAttribute('checked', null);
       validate(this);
     };
   }
@@ -64,6 +67,7 @@ function validate(mark) {
   button.disabled = true;
 
   var name = document.querySelector('#review-name');
+  name.value = browserCookies.get('name') || name.value;
   name.required = true;
   name.oninput = function() {
     validate(null);
@@ -74,7 +78,44 @@ function validate(mark) {
   text.oninput = function() {
     validate(null);
   };
+  //меняем атрибуты checked у оценок по значению cookies
+  var oldCheckedMark = formContainer.querySelector('input[name="review-mark"][checked]');
+  var newCheckedMark = oldCheckedMark;
 
-  var checkedMark = formContainer.querySelector('input[name="review-mark"][checked]');
-  validate(checkedMark);
+  var savedMark = browserCookies.get('mark');
+  if (savedMark !== null) {
+    oldCheckedMark.removeAttribute('checked');
+    newCheckedMark = formContainer.querySelector('input[name="review-mark"][value="' + savedMark + '"]');
+    newCheckedMark.setAttribute('checked', null);
+  }
+
+  validate(newCheckedMark);
+
+  //cookies
+  var form = formContainer.querySelector('form');
+  form.onsubmit = function(evt) {
+    evt.preventDefault();
+    var dateNow = new Date();
+    var dateBirthday = new Date(dateNow.getFullYear(), 0, 20);
+    var oneYear = 1000 * 60 * 60 * 24 * 365;
+    var dateDifferent = dateBirthday.valueOf() - dateNow.valueOf();
+
+    if (dateDifferent > 0) {
+      dateDifferent = oneYear - dateDifferent;
+    } else if (dateDifferent < 0) {
+      dateDifferent = dateDifferent * -1;
+    } else {
+      dateDifferent = oneYear;
+    }
+
+    var dateToExpire = new Date(dateNow.valueOf() + dateDifferent);
+    var formattedDateToExpire = { expires: dateToExpire.toUTCString() };
+
+    browserCookies.set('name', name.value, formattedDateToExpire);
+
+    var mark = document.querySelector('input[name="review-mark"][checked]');
+    browserCookies.set('mark', mark.value, formattedDateToExpire);
+
+    form.submit();
+  };
 })();
