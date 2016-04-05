@@ -21,13 +21,14 @@
   function renderReview(data) {
     var review = elementToClone.cloneNode(true);
     var reviewImg = review.querySelector('.review-author');
+    var reviewImgSrc = data.author.picture;
 
     review.querySelector('.review-text').textContent = data.description;
     review.querySelector('.review-rating').textContent = data.rating;
     reviewImg.alt = data.author.name;
     reviewImg.title = data.author.name;
 
-    renderImg(data, review, reviewImg);
+    renderImg(review, reviewImg, reviewImgSrc);
 
     reviewsList.appendChild(review);
 
@@ -36,17 +37,18 @@
   }
 
   /**
-  * @param {object} data
   * @param {HTMLElement} review
   * @param {HTMLElement} reviewImg
+  * @param {String} reviewImgSrc
   */
-  function renderImg(data, review, reviewImg) {
+  function renderImg(review, reviewImg, reviewImgSrc) {
+    var TIMEOUT = 10000;
     var avatarImage = new Image(124, 124);
     var imageLoadTimeout;
 
     avatarImage.onload = function() {
       clearTimeout(imageLoadTimeout);
-      reviewImg.src = data.author.picture;
+      reviewImg.src = reviewImgSrc;
       reviewImg.width = avatarImage.width;
       reviewImg.height = avatarImage.height;
     };
@@ -58,8 +60,9 @@
     imageLoadTimeout = setTimeout(function() {
       avatarImage.src = '';
       review.classList.add('review-load-failure');
-    }, 10000);
-    avatarImage.src = data.author.picture;
+    }, TIMEOUT);
+
+    avatarImage.src = reviewImgSrc;
   }
 
   window.reviews.forEach(renderReview);
