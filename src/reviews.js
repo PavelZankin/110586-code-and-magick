@@ -1,12 +1,15 @@
 'use strict';
 
 (function() {
+
   var reviewsFilter = document.querySelector('.reviews-filter');
   reviewsFilter.classList.add('invisible');
 
   var reviewsList = document.querySelector('.reviews-list');
   var templateElement = document.querySelector('#review-template');
+  var TIMEOUT = 10000;
   var elementToClone;
+  var reviews = [];
 
   if ('content' in templateElement) {
     elementToClone = templateElement.content.querySelector('.review');
@@ -42,7 +45,6 @@
   * @param {String} reviewImgSrc
   */
   function renderImg(review, reviewImg, reviewImgSrc) {
-    var TIMEOUT = 10000;
     var avatarImage = new Image(124, 124);
     var imageLoadTimeout;
 
@@ -65,7 +67,111 @@
     avatarImage.src = reviewImgSrc;
   }
 
-  window.reviews.forEach(renderReview);
+  /** @param {function(Array.<Object>)} callback */
+  function getReviews(callback) { // получение отзывов
+    var xhr = new XMLHttpRequest();
+    var reviewsBlock = document.querySelector('.reviews');
+    reviewsBlock.classList.add('reviews-list-loading');
+
+    xhr.onload = function(evt) {
+      reviewsBlock.classList.remove('reviews-list-loading');
+      var requestObj = evt.target;
+      var response = requestObj.response;
+      reviews = JSON.parse(response);
+      callback(reviews);
+    };
+
+    xhr.onerror = function() {
+      reviewsBlock.classList.remove('reviews-list-loading');
+      reviewsBlock.classList.add('review-load-failure');
+    };
+
+    xhr.timiout = TIMEOUT;
+    xhr.ontimeout = function() {
+      reviewsBlock.classList.remove('reviews-list-loading');
+      reviewsBlock.classList.add('review-load-failure');
+    };
+
+    xhr.open('GET', '//o0.github.io/assets/json/reviews.json');
+    xhr.send();
+  }
+
+  /** @param {function(Array.<Object>)} filteredReviews */
+  function renderReviews(filteredReviews) { //удаление старых отзывов и отрисовка новых
+    reviewsList.innerHTML = '';
+    filteredReviews.forEach(renderReview);
+  }
+
+  function setFiltrationEnabled() { // id фильтра по клику
+    var filters = reviewsFilter.querySelectorAll('.reviews-filter-item');
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].onclick = function() {
+        setFilterEnabled(this.htmlFor);
+      };
+    }
+  }
+
+  /** @param {string} filter */
+  function setFilterEnabled(filter) { // переотрисовка отфильтрованных отзывов
+    var filtredReviews = getFilteredListRewiews(filter);
+    renderReviews(filtredReviews);
+
+    var activeFilter = reviewsFilter.querySelector('input[name="reviews"][checked]');
+    if (activeFilter) {
+      activeFilter.removeAttribute('checked');
+    }
+
+    var filterToActivate = document.getElementById(filter);
+    filterToActivate.setAttribute('checked', null);
+  }
+
+  /** @param {string} filter */
+  function getFilteredListRewiews(filter) { // фильрация отзывов
+    var reviewsToFilter = reviews.slice(0);
+
+    switch (filter) {
+      case 'reviews-recent':
+        reviewsToFilter.sort(function(a, b) {
+          if (a.date > b.date) {
+            return -1;
+          }
+          if (a.date < b.date) {
+            return 1;
+          }
+          return 0;
+        });
+        break;
+      case 'reviews-good':
+        reviewsToFilter = reviewsToFilter.filter(function(mark) {
+          return mark.rating > 2;
+        });
+        reviewsToFilter.sort(function(a, b) {
+          return b.rating - a.rating;
+        });
+        break;
+      case 'reviews-bad':
+        reviewsToFilter = reviewsToFilter.filter(function(mark) {
+          return mark.rating < 3;
+        });
+        reviewsToFilter.sort(function(a, b) {
+          return a.rating - b.rating;
+        });
+        break;
+      case 'reviews-popular':
+        reviewsToFilter.sort(function(a, b) {
+          return b.review_usefulness - a.review_usefulness;
+        });
+        break;
+    }
+
+    return reviewsToFilter;
+  }
+
+  getReviews(function(loadedReviews) {
+    reviews = loadedReviews;
+    setFiltrationEnabled();
+    renderReviews(reviews);
+  });
 
   reviewsFilter.classList.remove('invisible');
 })();
