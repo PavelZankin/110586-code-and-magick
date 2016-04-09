@@ -7,9 +7,12 @@
 
   var reviewsList = document.querySelector('.reviews-list');
   var templateElement = document.querySelector('#review-template');
-  var TIMEOUT = 10000;
+  var reviewsBlock = document.querySelector('.reviews');
   var elementToClone;
   var reviews = [];
+
+  /** @constant {number} */
+  var REQUEST_TIMEOUT = 10000;
 
   if ('content' in templateElement) {
     elementToClone = templateElement.content.querySelector('.review');
@@ -62,7 +65,7 @@
     imageLoadTimeout = setTimeout(function() {
       avatarImage.src = '';
       review.classList.add('review-load-failure');
-    }, TIMEOUT);
+    }, REQUEST_TIMEOUT);
 
     avatarImage.src = reviewImgSrc;
   }
@@ -70,7 +73,6 @@
   /** @param {function(Array.<Object>)} callback */
   function getReviews(callback) { // получение отзывов
     var xhr = new XMLHttpRequest();
-    var reviewsBlock = document.querySelector('.reviews');
     reviewsBlock.classList.add('reviews-list-loading');
 
     xhr.onload = function(evt) {
@@ -82,18 +84,21 @@
     };
 
     xhr.onerror = function() {
-      reviewsBlock.classList.remove('reviews-list-loading');
-      reviewsBlock.classList.add('review-load-failure');
+      removeLoadingAndAddFailure();
     };
 
-    xhr.timiout = TIMEOUT;
+    xhr.timiout = REQUEST_TIMEOUT;
     xhr.ontimeout = function() {
-      reviewsBlock.classList.remove('reviews-list-loading');
-      reviewsBlock.classList.add('review-load-failure');
+      removeLoadingAndAddFailure();
     };
 
     xhr.open('GET', '//o0.github.io/assets/json/reviews.json');
     xhr.send();
+  }
+
+  function removeLoadingAndAddFailure() {
+    reviewsBlock.classList.remove('reviews-list-loading');
+    reviewsBlock.classList.add('review-load-failure');
   }
 
   /** @param {function(Array.<Object>)} filteredReviews */
