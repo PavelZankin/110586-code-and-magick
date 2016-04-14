@@ -1,7 +1,5 @@
 'use strict';
 
-/* Домашнее задание */
-
 /* Функция принимающая текст и возвращающая колличество строк, фиксированные по ширине,
 получившиеся из него*/
 function getTextLines(game, text, maxWidth) {
@@ -736,5 +734,31 @@ function drawTextBox(game, text) {
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  var gameModule = document.querySelector('.demo');
+  var clouds = document.querySelector('.header-clouds');
+
+  function moveClouds() {
+    clouds.style.backgroundPositionX = -window.pageYOffset + 'px';
+  }
+
+  function isElementsVisible(element) {
+    return element.getBoundingClientRect().bottom >= 0;
+  }
+
+  function setParallaxEnabled() {
+    if(isElementsVisible(clouds)) {
+      window.addEventListener('scroll', moveClouds);
+    } else if(!isElementsVisible(clouds)) {
+      window.removeEventListener('scroll', moveClouds);
+    }
+
+    if (!isElementsVisible(gameModule)) {
+      game.setGameStatus(Game.Verdict.PAUSE);
+    }
+  }
+
+  setInterval(setParallaxEnabled, 100);
 })();
+
 
