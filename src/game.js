@@ -746,19 +746,22 @@ function drawTextBox(game, text) {
     return element.getBoundingClientRect().bottom >= 0;
   }
 
-  function setParallaxEnabled() {
-    if(isElementsVisible(clouds)) {
-      window.addEventListener('scroll', moveClouds);
-    } else if(!isElementsVisible(clouds)) {
-      window.removeEventListener('scroll', moveClouds);
-    }
-
+  function pauseWhenTheGameModuleInvisible() {
     if (!isElementsVisible(gameModule)) {
       game.setGameStatus(Game.Verdict.PAUSE);
     }
   }
 
-  setInterval(setParallaxEnabled, 100);
+  function setParallaxEnabled() {
+    if(isElementsVisible(clouds)) {
+      moveClouds(true);
+    }
+  }
+
+  window.addEventListener('scroll', function() {
+    setInterval(pauseWhenTheGameModuleInvisible, 100);
+  });
+  window.addEventListener('scroll', setParallaxEnabled);
 })();
 
 
