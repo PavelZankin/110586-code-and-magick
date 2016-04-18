@@ -1,6 +1,54 @@
 'use strict';
 
-require('./canvas');
+/* Функция принимающая текст и возвращающая колличество строк, фиксированные по ширине,
+получившиеся из него*/
+function getTextLines(game, text, maxWidth) {
+  var words = text.split(' ');
+  var lines = [];
+  var line = '';
+  for (var i = 0; i < words.length; ++i) {
+    var testLine = line + words[i] + ' ';
+    var testWidth = game.ctx.measureText(testLine).width;
+    if (testWidth > maxWidth) {
+      lines.push(line);
+      line = words[i] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+  return lines;
+}
+
+/*Обрисовка текста в canvas с переходом на новую строчку*/
+function drawText(game, x, y, lineHeight, lines) {
+  for (var i = 0; i < lines.length; ++i) {
+    game.ctx.fillText(lines[i], x, y);
+    y += lineHeight;
+  }
+}
+
+/*Обрисовка диалогового окна, с текстом, меняющегося по высоте
+ в зависимости от кол-ва строк текста, преследующее волшебника*/
+function drawTextBox(game, text) {
+  var x = game.state.objects[0].x; // левый край волшебника
+  var y = game.state.objects[0].y; // верхний край
+  var w = game.state.objects[0].width; // ширина волшебника
+  var h = game.state.objects[0].height; // высота
+
+  var maxWidth = 290;
+  var lineHeight = 30;
+  game.ctx.font = '16px PT Mono';
+  var lines = getTextLines(game, text, maxWidth);
+
+  game.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  game.ctx.fillRect(x + w + 10, y + h - 190, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillStyle = '#FFFFFF';
+  game.ctx.fillRect(x + w, y + h - 200, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillStyle = '#000000';
+
+  drawText(game, x + w + 15, y + h - 170, lineHeight, lines);
+}
 
 (function() {
   /**
@@ -379,7 +427,7 @@ require('./canvas');
     /**
      * Отрисовка экрана паузы.
      */
-    _drawPauseScreen: function(drawTextBox) {
+    _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
           drawTextBox(this, 'Пресвятые хоббитсы, я попал! ПОПАЛ!! ПОПААААЛ!!');
@@ -687,8 +735,33 @@ require('./canvas');
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 
+  var gameModule = document.querySelector('.demo');
+  var clouds = document.querySelector('.header-clouds');
 
-  require('./parallax');
+  function moveClouds() {
+    clouds.style.backgroundPositionX = -window.pageYOffset + 'px';
+  }
+
+  function isElementsVisible(element) {
+    return element.getBoundingClientRect().bottom >= 0;
+  }
+
+  function pauseWhenTheGameModuleInvisible() {
+    if (!isElementsVisible(gameModule)) {
+      game.setGameStatus(Game.Verdict.PAUSE);
+    }
+  }
+
+  function setParallaxEnabled() {
+    if(isElementsVisible(clouds)) {
+      moveClouds(true);
+    }
+  }
+
+  window.addEventListener('scroll', function() {
+    setInterval(pauseWhenTheGameModuleInvisible, 100);
+  });
+  window.addEventListener('scroll', setParallaxEnabled);
 })();
 
 
