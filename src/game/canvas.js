@@ -57,3 +57,5 @@ function drawTextBox(game, text) {
 
   drawText(game, x + w + 15, y + h - 170, lineHeight, lines);
 }
+
+module.exports.drawTextBox = drawTextBox;
