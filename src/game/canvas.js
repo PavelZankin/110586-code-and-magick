@@ -1,10 +1,13 @@
 'use strict';
+
 /**
-* @param {Object} game
-* @param {String} text
-* @param {Number} maxWidth
-*/
-function getTextLines(game, text, maxWidth) {
+ * [_getTextLines description]
+ * @param  {[type]} game     [description]
+ * @param  {[type]} text     [description]
+ * @param  {[type]} maxWidth [description]
+ * @return {[type]}          [description]
+ */
+function _getTextLines(game, text, maxWidth) {
   var words = text.split(' ');
   var lines = [];
   var line = '';
@@ -23,11 +26,15 @@ function getTextLines(game, text, maxWidth) {
 }
 
 /**
-* @param {Object} game
-* @param {Number} x, y, lineHeight
-* @param {Object} lines
-*/
-function drawText(game, x, y, lineHeight, lines) {
+ * [_drawText description]
+ * @param  {[type]} game       [description]
+ * @param  {[type]} x          [description]
+ * @param  {[type]} y          [description]
+ * @param  {[type]} lineHeight [description]
+ * @param  {[type]} lines      [description]
+ * @return {[type]}            [description]
+ */
+function _drawText(game, x, y, lineHeight, lines) {
   for (var i = 0; i < lines.length; ++i) {
     game.ctx.fillText(lines[i], x, y);
     y += lineHeight;
@@ -47,7 +54,7 @@ function drawTextBox(game, text) {
   var maxWidth = 290;
   var lineHeight = 30;
   game.ctx.font = '16px PT Mono';
-  var lines = getTextLines(game, text, maxWidth);
+  var lines = _getTextLines(game, text, maxWidth);
 
   game.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   game.ctx.fillRect(x + w + 10, y + h - 190, maxWidth + 10, lines.length * lineHeight + 15);
@@ -55,7 +62,7 @@ function drawTextBox(game, text) {
   game.ctx.fillRect(x + w, y + h - 200, maxWidth + 10, lines.length * lineHeight + 15);
   game.ctx.fillStyle = '#000000';
 
-  drawText(game, x + w + 15, y + h - 170, lineHeight, lines);
+  _drawText(game, x + w + 15, y + h - 170, lineHeight, lines);
 }
 
 module.exports.drawTextBox = drawTextBox;

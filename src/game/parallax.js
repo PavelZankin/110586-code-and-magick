@@ -1,21 +1,29 @@
 'use strict';
 var clouds = document.querySelector('.header-clouds');
 
-function moveClouds() {
+function _moveClouds() {
   clouds.style.backgroundPositionX = -window.pageYOffset + 'px';
 }
 
-function isElementsVisible(element) {
+function _isElementsVisible(element) {
   return element.getBoundingClientRect().bottom >= 0;
 }
 
-function setParallaxEnabled() {
-  if(isElementsVisible(clouds)) {
-    moveClouds(true);
+function _setParallaxEnabled() {
+  if(_isElementsVisible(clouds)) {
+    _moveClouds(true);
   }
 }
 
-window.addEventListener('scroll', setParallaxEnabled);
+function pauseWhenTheGameModuleInvisible(game) {
+  var gameModule = document.querySelector('.demo');
+  if (!_isElementsVisible(gameModule)) {
+    game.setGameStatus(window.Game.Verdict.PAUSE);
+  }
+}
 
-module.exports.isElementsVisible = isElementsVisible;
 
+window.addEventListener('scroll', _setParallaxEnabled);
+
+module.exports._isElementsVisible = _isElementsVisible;
+module.exports.pauseWhenTheGameModuleInvisible = pauseWhenTheGameModuleInvisible;

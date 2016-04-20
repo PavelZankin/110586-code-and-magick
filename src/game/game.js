@@ -1,8 +1,11 @@
 'use strict';
 
-var canvas = require('./canvas');
-
 (function() {
+
+  var canvas = require('./canvas');
+
+  var parallax = require('./parallax');
+
   /**
    * @const
    * @type {number}
@@ -687,17 +690,12 @@ var canvas = require('./canvas');
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 
-  var gameModule = document.querySelector('.demo');
-  var parallax = require('./parallax');
-
-  function pauseWhenTheGameModuleInvisible() {
-    if (!parallax.isElementsVisible(gameModule)) {
-      game.setGameStatus(Game.Verdict.PAUSE);
-    }
-  }
 
   window.addEventListener('scroll', function() {
-    setInterval(pauseWhenTheGameModuleInvisible, 100);
+    setTimeout(function() {
+      parallax.pauseWhenTheGameModuleInvisible(game);
+      console.log(parallax.pauseWhenTheGameModuleInvisible(game));
+    }, 100);
   });
 
 })();
