@@ -688,11 +688,10 @@
   window.Game = Game;
   window.Game.Verdict = Verdict;
 
-  var game = new Game(document.querySelector('.demo'));
+  var gameModule = document.querySelector('.demo');
+  var game = new Game(gameModule);
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
-
-  var gameModule = document.querySelector('.demo');
 
   function _pauseWhenTheGameModuleInvisible() {
     if (!utilities.isElementsVisible(gameModule)) {
