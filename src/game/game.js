@@ -2,9 +2,11 @@
 
 (function() {
 
+  require('./parallax');
+
   var canvas = require('./canvas');
 
-  var parallax = require('./parallax');
+  var utilities = require('../utilities');
 
   /**
    * @const
@@ -690,11 +692,16 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 
+  function _pauseWhenTheGameModuleInvisible() {
+    var gameModule = document.querySelector('.demo');
+    if (!utilities.isElementsVisible(gameModule)) {
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }
+  }
 
   window.addEventListener('scroll', function() {
     setTimeout(function() {
-      parallax.pauseWhenTheGameModuleInvisible(game);
-      console.log(parallax.pauseWhenTheGameModuleInvisible(game));
+      _pauseWhenTheGameModuleInvisible();
     }, 100);
   });
 
