@@ -692,8 +692,9 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 
+  var gameModule = document.querySelector('.demo');
+
   function _pauseWhenTheGameModuleInvisible() {
-    var gameModule = document.querySelector('.demo');
     if (!utilities.isElementsVisible(gameModule)) {
       game.setGameStatus(window.Game.Verdict.PAUSE);
     }
