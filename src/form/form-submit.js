@@ -18,4 +18,4 @@ form.onsubmit = function(evt) {
   form.submit();
 };
 
-module.exports.browserCookies = browserCookies;
+
