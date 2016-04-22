@@ -4,12 +4,12 @@ var reviewsFilter = document.querySelector('.reviews-filter');
 var activeFilter = reviewsFilter.querySelector('input[name="reviews"][checked]');
 
 var data = require('./data');
-var render = require('./render');
+var pagination = require('./pagination');
 
 
 
 /** @param {string} filter */
-function getFilteredListRewiews(filter) {
+function _getFilteredListRewiews(filter) {
   var reviewsToFilter = data.reviews.slice(0);
 
   switch (filter) {
@@ -52,8 +52,8 @@ function getFilteredListRewiews(filter) {
 
   /** @param {string} filter */
 function setFilterEnabled(filter) {
-  module.exports.filteredReviews = getFilteredListRewiews(filter);
-  render.pageNumber = 0;
+  module.exports.filteredReviews = _getFilteredListRewiews(filter);
+  pagination.pageNumber = 0;
 
   if (activeFilter) {
     activeFilter.removeAttribute('checked');
@@ -62,7 +62,7 @@ function setFilterEnabled(filter) {
   var filterToActivate = document.getElementById(filter);
   filterToActivate.setAttribute('checked', null);
 
-  render.renderReviews(true);
+  pagination.renderReviews(true);
 }
 
 function setFiltrationEnabled() {

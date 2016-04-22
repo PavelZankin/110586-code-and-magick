@@ -6,7 +6,7 @@ var REQUEST_TIMEOUT = 10000;
 var reviewsBlock = document.querySelector('.reviews');
 var reviews = [];
 
-function removeLoadingAndAddFailure() {
+function _removeLoadingAndAddFailure() {
   reviewsBlock.classList.remove('reviews-list-loading');
   reviewsBlock.classList.add('review-load-failure');
 }
@@ -28,12 +28,12 @@ function loadReviews(uri, callback) {
   };
 
   xhr.onerror = function() {
-    removeLoadingAndAddFailure();
+    _removeLoadingAndAddFailure();
   };
 
   xhr.timiout = REQUEST_TIMEOUT;
   xhr.ontimeout = function() {
-    removeLoadingAndAddFailure();
+    _removeLoadingAndAddFailure();
   };
 
   xhr.open('GET', uri);

@@ -27,10 +27,11 @@ buttonMoreReviews.addEventListener('click', function() {
 });
 
 /**
-* @param {object} data
-* @return {HTMLElement} review
-*/
-function renderReview(data) {
+ * [renderReview description]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+function _renderReview(data) {
   var review = elementToClone.cloneNode(true);
   var reviewImg = review.querySelector('.review-author');
   var reviewImgSrc = data.author.picture;
@@ -47,32 +48,43 @@ function renderReview(data) {
   return review;
 
 }
-
-function isNextPageAvailable() {
+/**
+ * [isNextPageAvailable description]
+ * @return {Boolean} [description]
+ */
+function _isNextPageAvailable() {
   return (module.exports.pageNumber + 1) * PAGE_SIZE < modules.filter.filteredReviews.length;
 }
 
-/** @param {object} array */
-function prepareReviewsToRender(array) {
+/**
+ * [prepareReviewsToRender description]
+ * @param  {[type]} array [description]
+ * @return {[type]}       [description]
+ */
+function _prepareReviewsToRender(array) {
   var renderBegin = module.exports.pageNumber * PAGE_SIZE;
   var renderEnd = renderBegin + PAGE_SIZE;
 
   return array.slice(renderBegin, renderEnd);
 }
 
-/** @param {boolean=} replace */
+/**
+ * [renderReviews description]
+ * @param  {[type]} replace [description]
+ * @return {[type]}         [description]
+ */
 function renderReviews(replace) {
   if (replace) {
     reviewsList.innerHTML = '';
   }
 
-  if (!isNextPageAvailable()) {
+  if (!_isNextPageAvailable()) {
     buttonMoreReviews.classList.add('invisible');
   } else {
     buttonMoreReviews.classList.remove('invisible');
   }
 
-  prepareReviewsToRender(modules.filter.filteredReviews).forEach(renderReview);
+  _prepareReviewsToRender(modules.filter.filteredReviews).forEach(_renderReview);
 }
 
 module.exports.renderReviews = renderReviews;

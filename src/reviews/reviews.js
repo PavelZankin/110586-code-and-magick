@@ -3,7 +3,7 @@
 var modules = {
   data: require('./data'),
   filter: require('./filter'),
-  render: require('./render')
+  pagination: require('./pagination')
 };
 
 (function() {
