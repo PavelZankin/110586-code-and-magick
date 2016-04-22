@@ -23,6 +23,31 @@ module.exports = {
 
   isElementsVisible: function(element) {
     return element.getBoundingClientRect().bottom >= 0;
+  },
+
+    /**
+   * @param {KeyboardEvent} evt [description]
+   * @private
+   */
+  onKeyDown: function(evt) {
+    switch (evt.keyCode) {
+      case 37:
+        this.state.keysPressed.LEFT = true;
+        break;
+      case 39:
+        this.state.keysPressed.RIGHT = true;
+        break;
+      case 38:
+        this.state.keysPressed.UP = true;
+        break;
+      case 27:
+        this.state.keysPressed.ESC = true;
+        break;
+    }
+
+    if (evt.shiftKey) {
+      this.state.keysPressed.SHIFT = true;
+    }
   }
 
 };

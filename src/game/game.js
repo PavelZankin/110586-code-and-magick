@@ -260,7 +260,7 @@
 
     this.ctx = this.canvas.getContext('2d');
 
-    this._onKeyDown = this._onKeyDown.bind(this);
+    this.utilities.onKeyDown = this.utilities.onKeyDown.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
     this._pauseListener = this._pauseListener.bind(this);
   };
@@ -622,30 +622,7 @@
       }
     },
 
-    /**
-     * @param {KeyboardEvent} evt [description]
-     * @private
-     */
-    _onKeyDown: function(evt) {
-      switch (evt.keyCode) {
-        case 37:
-          this.state.keysPressed.LEFT = true;
-          break;
-        case 39:
-          this.state.keysPressed.RIGHT = true;
-          break;
-        case 38:
-          this.state.keysPressed.UP = true;
-          break;
-        case 27:
-          this.state.keysPressed.ESC = true;
-          break;
-      }
 
-      if (evt.shiftKey) {
-        this.state.keysPressed.SHIFT = true;
-      }
-    },
 
     /**
      * @param {KeyboardEvent} evt [description]
@@ -674,13 +651,13 @@
 
     /** @private */
     _initializeGameListeners: function() {
-      window.addEventListener('keydown', this._onKeyDown);
+      window.addEventListener('keydown', this.utilities.onKeyDown);
       window.addEventListener('keyup', this._onKeyUp);
     },
 
     /** @private */
     _removeGameListeners: function() {
-      window.removeEventListener('keydown', this._onKeyDown);
+      window.removeEventListener('keydown', this.utilities.onKeyDown);
       window.removeEventListener('keyup', this._onKeyUp);
     }
   };
