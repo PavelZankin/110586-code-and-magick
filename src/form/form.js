@@ -11,15 +11,15 @@
   var labelText = document.querySelector('.review-fields-text');
   var labelBlock = document.querySelector('.review-fields');
 
-  document.querySelector('.reviews-controls-new').onclick = function(evt) {
+  document.querySelector('.reviews-controls-new').addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
-  };
+  });
 
-  document.querySelector('.review-form-close').onclick = function(evt) {
+  document.querySelector('.review-form-close').addEventListener('click', function(evt) {
     evt.preventDefault();
     formContainer.classList.add('invisible');
-  };
+  });
 
   var marks = formContainer.querySelectorAll('input[name="review-mark"]');
   for (var i = 0; i < marks.length; i++) {
