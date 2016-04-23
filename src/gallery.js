@@ -9,8 +9,12 @@ var previewId = galleryContainer.querySelector('.preview-number-current');
 var imgPrev = galleryContainer.querySelector('.overlay-gallery-control-left');
 var imgNext = galleryContainer.querySelector('.overlay-gallery-control-right');
 var btnCloseGallery = galleryContainer.querySelector('.overlay-gallery-close');
-var imgDisabled = 'overlay-gallery-control--disabled';
+var imgDisabledClassName = 'overlay-gallery-control--disabled';
 var photos = [];
+var lengthArrayPhotos = photos.length;
+
+/** @constant {number} */
+var KEY_CODE_ESC = 27;
 
 var currentPhoto;
 var idPhoto;
@@ -20,28 +24,30 @@ function _onCloseClick() {
 }
 
 function _onDocumentKeyDown(evt) {
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === KEY_CODE_ESC) {
     _hideGallery();
   }
 }
 
 function _showNextImage() {
-  if (idPhoto < photos.length - 1) {
-    _changePhoto(idPhoto = idPhoto + 1);
+  if (idPhoto < lengthArrayPhotos - 1) {
+
+    _changePhoto(idPhoto++ );
   }
 }
 
 function _showPrevImage() {
   if (idPhoto > 0) {
-    _changePhoto(idPhoto = idPhoto - 1);
+
+    _changePhoto(idPhoto-- );
   }
 }
 
 function _changePhoto() {
   currentPhoto.src = photos[idPhoto];
 
-  imgPrev.classList.toggle(imgDisabled, idPhoto === 0);
-  imgNext.classList.toggle(imgDisabled, idPhoto === photos.length - 1);
+  imgPrev.classList.toggle(imgDisabledClassName, idPhoto === 0);
+  imgNext.classList.toggle(imgDisabledClassName, idPhoto === lengthArrayPhotos - 1);
 
   previewId.textContent = idPhoto + 1;
 }
@@ -61,8 +67,9 @@ function getPhotos() {
     photos.push(imgArray[i].getAttribute('src'));
     imgArray[i].dataset.id = i;
   }
+  lengthArrayPhotos = photos.length;
 
-  totalPreviews.textContent = photos.length;
+  totalPreviews.textContent = lengthArrayPhotos;
   currentPhoto = galleryPreview.appendChild(new Image(480, 480));
 }
 
@@ -84,6 +91,9 @@ photogallery.addEventListener('click', function(evt) {
   evt.preventDefault();
   if (evt.target.tagName === 'IMG') {
     idPhoto = parseInt(evt.target.dataset.id, 10);
-    showGallery(idPhoto);
+    showGallery();
   }
 });
+
+module.exports.getPhotos = getPhotos;
+module.exports.showGallery = showGallery;
