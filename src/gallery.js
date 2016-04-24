@@ -8,7 +8,6 @@ var previewId = galleryContainer.querySelector('.preview-number-current');
 var imgPrev = galleryContainer.querySelector('.overlay-gallery-control-left');
 var imgNext = galleryContainer.querySelector('.overlay-gallery-control-right');
 var btnCloseGallery = galleryContainer.querySelector('.overlay-gallery-close');
-var photogallery = document.querySelector('.photogallery');
 var imgDisabledClassName = 'overlay-gallery-control--disabled';
 var photos = [];
 var lengthArrayPhotos = photos.length;
@@ -17,7 +16,8 @@ var lengthArrayPhotos = photos.length;
 var KEY_CODE_ESC = 27;
 
 var currentPhoto;
-var idPhoto;
+var numberPhoto;
+
 
 function _onCloseClick() {
   _hideGallery();
@@ -30,26 +30,26 @@ function _onDocumentKeyDown(evt) {
 }
 
 function _showNextImage() {
-  if (idPhoto < lengthArrayPhotos - 1) {
+  if (numberPhoto < lengthArrayPhotos - 1) {
 
-    _changePhoto(idPhoto++ );
+    _changePhoto(numberPhoto++ );
   }
 }
 
 function _showPrevImage() {
-  if (idPhoto > 0) {
+  if (numberPhoto > 0) {
 
-    _changePhoto(idPhoto-- );
+    _changePhoto(numberPhoto-- );
   }
 }
 
 function _changePhoto() {
-  currentPhoto.src = photos[idPhoto];
+  currentPhoto.src = photos[numberPhoto];
 
-  imgPrev.classList.toggle(imgDisabledClassName, idPhoto === 0);
-  imgNext.classList.toggle(imgDisabledClassName, idPhoto === lengthArrayPhotos - 1);
+  imgPrev.classList.toggle(imgDisabledClassName, numberPhoto === 0);
+  imgNext.classList.toggle(imgDisabledClassName, numberPhoto === lengthArrayPhotos - 1);
 
-  previewId.textContent = idPhoto + 1;
+  previewId.textContent = numberPhoto + 1;
 }
 
 function _hideGallery() {
@@ -73,9 +73,10 @@ function getPhotos() {
   currentPhoto = galleryPreview.appendChild(new Image(480, 480));
 }
 
-function showGallery() {
-  currentPhoto.src = photos[idPhoto];
-  previewId.textContent = idPhoto + 1;
+function showGallery(idPhoto) {
+  numberPhoto = idPhoto;
+  currentPhoto.src = photos[numberPhoto];
+  previewId.textContent = numberPhoto + 1;
   galleryContainer.classList.remove('invisible');
 
   imgPrev.addEventListener('click', _showPrevImage);
@@ -85,12 +86,6 @@ function showGallery() {
   window.addEventListener('keydown', _onDocumentKeyDown);
 }
 
-
-photogallery.addEventListener('click', function(evt) {
-  if (evt.target.tagName === 'IMG') {
-    idPhoto = parseInt(evt.target.dataset.id, 10);
-  }
-});
 
 module.exports.getPhotos = getPhotos;
 module.exports.showGallery = showGallery;
