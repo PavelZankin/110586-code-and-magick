@@ -1,20 +1,17 @@
 'use strict';
 
 var modules = {
-  index: require('./index'),
+  load: require('./load'),
   filter: require('./filter'),
   pagination: require('./pagination')
 };
 
 (function() {
 
-  modules.filter.reviewsFilter.classList.add('invisible');
+  modules.load.loadReviews('//o0.github.io/assets/json/reviews.json', function() {
 
-  modules.index.loadReviews('//o0.github.io/assets/json/reviews.json', function(data) {
-    modules.index.reviews = data;
     modules.filter.setFiltrationEnabled();
-    modules.filter.setFilterEnabled(modules.filter.activeFilter.id);
-    modules.filter.reviewsFilter.classList.remove('invisible');
+    modules.filter.setActiveFilter(modules.filter.activeFilter.id);
   });
 
 })();

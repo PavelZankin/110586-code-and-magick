@@ -1,8 +1,10 @@
 'use strict';
 
+/**This module creates and appends review element */
+
 var elementToClone;
 var templateElement = document.querySelector('#review-template');
-var index = require('./index');
+var load = require('./load');
 
 if ('content' in templateElement) {
   elementToClone = templateElement.content.querySelector('.review');
@@ -24,7 +26,7 @@ var _getElementReviews = function(data) {
   elementImg.alt = data.author.name;
   elementImg.title = data.author.name;
 
-  index.loadImg(element, elementImg, elementImgSrc);
+  load.loadImg(element, elementImg, elementImgSrc);
 
   return element;
 };

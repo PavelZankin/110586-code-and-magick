@@ -1,5 +1,7 @@
 'use strict';
 
+/**This module breaks reviews and renders one page */
+
 var buttonMoreReviews = document.querySelector('.reviews-controls-more');
 buttonMoreReviews.classList.remove('invisible');
 
@@ -10,7 +12,7 @@ var reviewsList = document.querySelector('.reviews-list');
 var PAGE_SIZE = 3;
 
 var filter = require('./filter');
-var Review = require('./constructor_review');
+var Review = require('./render-review');
 
 
 buttonMoreReviews.addEventListener('click', function() {

@@ -1,10 +1,11 @@
 'use strict';
 
+/**This module load reviews */
+
 /** @constant {number} */
 var REQUEST_TIMEOUT = 10000;
 
 var reviewsBlock = document.querySelector('.reviews');
-var reviews = [];
 
 function _removeLoadingAndAddFailure() {
   reviewsBlock.classList.remove('reviews-list-loading');
@@ -23,8 +24,8 @@ function loadReviews(uri, callback) {
     reviewsBlock.classList.remove('reviews-list-loading');
     var requestObj = evt.target;
     var response = requestObj.response;
-    reviews = JSON.parse(response);
-    callback(reviews);
+    module.exports.reviews = JSON.parse(response);
+    callback(module.exports.reviews);
   };
 
   xhr.onerror = function() {
@@ -71,4 +72,4 @@ function loadImg(review, reviewImg, reviewImgSrc) {
 
 module.exports.loadReviews = loadReviews;
 module.exports.loadImg = loadImg;
-module.exports.reviews = reviews;
+module.exports.reviews = [];
