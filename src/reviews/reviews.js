@@ -1,7 +1,7 @@
 'use strict';
 
 var modules = {
-  data: require('./data'),
+  index: require('./index'),
   filter: require('./filter'),
   pagination: require('./pagination')
 };
@@ -10,8 +10,8 @@ var modules = {
 
   modules.filter.reviewsFilter.classList.add('invisible');
 
-  modules.data.loadReviews('//o0.github.io/assets/json/reviews.json', function(data) {
-    modules.data.reviews = data;
+  modules.index.loadReviews('//o0.github.io/assets/json/reviews.json', function(data) {
+    modules.index.reviews = data;
     modules.filter.setFiltrationEnabled();
     modules.filter.setFilterEnabled(modules.filter.activeFilter.id);
     modules.filter.reviewsFilter.classList.remove('invisible');

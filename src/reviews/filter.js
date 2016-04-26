@@ -3,14 +3,14 @@
 var reviewsFilter = document.querySelector('.reviews-filter');
 var activeFilter = reviewsFilter.querySelector('input[name="reviews"][checked]');
 
-var data = require('./data');
+var index = require('./index');
 var pagination = require('./pagination');
 
 
 
 /** @param {string} filter */
 function _getFilteredListRewiews(filter) {
-  var reviewsToFilter = data.reviews.slice(0);
+  var reviewsToFilter = index.reviews.slice(0);
 
   switch (filter) {
     case 'reviews-recent':
