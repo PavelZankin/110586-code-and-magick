@@ -699,10 +699,14 @@
     }
   }
 
+  var TIMEOUT_ON_SCROLL = 100;
+  var scrollTimeout;
+
   window.addEventListener('scroll', function() {
-    setTimeout(function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
       _pauseWhenTheGameModuleInvisible();
-    }, 100);
+    }, TIMEOUT_ON_SCROLL);
   });
 
 })();

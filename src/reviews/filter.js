@@ -1,16 +1,18 @@
 'use strict';
 
+/**This module filtered reviews */
+
 var reviewsFilter = document.querySelector('.reviews-filter');
 var activeFilter = reviewsFilter.querySelector('input[name="reviews"][checked]');
 
-var data = require('./data');
+var load = require('./load');
 var pagination = require('./pagination');
 
 
 
 /** @param {string} filter */
 function _getFilteredListRewiews(filter) {
-  var reviewsToFilter = data.reviews.slice(0);
+  var reviewsToFilter = load.reviews.slice(0);
 
   switch (filter) {
     case 'reviews-recent':
@@ -51,7 +53,7 @@ function _getFilteredListRewiews(filter) {
 }
 
   /** @param {string} filter */
-function setFilterEnabled(filter) {
+function setActiveFilter(filter) {
   module.exports.filteredReviews = _getFilteredListRewiews(filter);
   pagination.pageNumber = 0;
 
@@ -66,16 +68,16 @@ function setFilterEnabled(filter) {
 }
 
 function setFiltrationEnabled() {
+  reviewsFilter.classList.remove('invisible');
   reviewsFilter.addEventListener('click', function(evt) {
     if (evt.target.classList.contains('reviews-filter-item')) {
-      setFilterEnabled(evt.target.htmlFor);
+      setActiveFilter(evt.target.htmlFor);
     }
   });
 }
 
 module.exports.setFiltrationEnabled = setFiltrationEnabled;
-module.exports.setFilterEnabled = setFilterEnabled;
+module.exports.setActiveFilter = setActiveFilter;
 module.exports.filteredReviews = [];
-module.exports.reviewsFilter = reviewsFilter;
 module.exports.activeFilter = activeFilter;
 
