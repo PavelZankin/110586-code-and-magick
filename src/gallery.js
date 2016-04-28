@@ -15,77 +15,89 @@ var lengthArrayPhotos = photos.length;
 /** @constant {number} */
 var KEY_CODE_ESC = 27;
 
-var currentPhoto;
-var numberPhoto;
 
+function Gallery() {
 
-function _onCloseClick() {
-  _hideGallery();
+  var that = this;
+  this.photos = [];
+
+  this.getPhotos = function() {
+    that.photos = Array.prototype.map.call(imgArray, function(image, i) {
+      image.dataset.id = i;
+      return image.getAttribute('src');
+    });
+
+    lengthArrayPhotos = that.photos.length;
+
+    totalPreviews.textContent = lengthArrayPhotos;
+    that.currentPhoto = galleryPreview.appendChild(new Image(480, 480));
+  };
+
+  this.showGallery = function(idPhoto) {
+    that.numberPhoto = idPhoto;
+    that.currentPhoto.src = that.photos[that.numberPhoto];
+    previewId.textContent = that.numberPhoto + 1;
+    galleryContainer.classList.remove('invisible');
+
+    imgPrev.addEventListener('click', that.showPrevImage);
+    imgNext.addEventListener('click', that.showNextImage);
+    btnCloseGallery.addEventListener('click', that.onCloseClick);
+
+    window.addEventListener('keydown', that.onDocumentKeyDown);
+  };
+
+  this.showPrevImage = function() {
+    if (that.numberPhoto > 0) {
+
+      that.changePhoto(that.numberPhoto-- );
+    }
+  };
+
+  this.showNextImage = function() {
+    if (that.numberPhoto < lengthArrayPhotos - 1) {
+
+      that.changePhoto(that.numberPhoto++ );
+    }
+  };
+
+  this.hideGallery = function() {
+    galleryContainer.classList.add('invisible');
+
+    imgPrev.removeEventListener('click', that.showPrevImage);
+    imgNext.removeEventListener('click', that.showNextImage);
+    btnCloseGallery.removeEventListener('click', that.onCloseClick);
+
+    window.removeEventListener('keydown', that.onDocumentKeyDown);
+  };
+
+  this.onCloseClick = function() {
+    that.hideGallery();
+  };
+
+  this.onDocumentKeyDown = function(evt) {
+    if (evt.keyCode === KEY_CODE_ESC) {
+      that.hideGallery();
+    }
+  };
+
+  this.changePhoto = function() {
+    that.currentPhoto.src = that.photos[that.numberPhoto];
+
+    imgPrev.classList.toggle(imgDisabledClassName, that.numberPhoto === 0);
+    imgNext.classList.toggle(imgDisabledClassName, that.numberPhoto === lengthArrayPhotos - 1);
+
+    previewId.textContent = that.numberPhoto + 1;
+  };
+
+  this.clickPhotogallery = function(evt) {
+    if (evt.target.dataset.id) {
+      evt.preventDefault();
+      that.showGallery(parseInt(evt.target.dataset.id, 10));
+    }
+  };
+
+  this.getPhotos();
+
 }
 
-function _onDocumentKeyDown(evt) {
-  if (evt.keyCode === KEY_CODE_ESC) {
-    _hideGallery();
-  }
-}
-
-function _showNextImage() {
-  if (numberPhoto < lengthArrayPhotos - 1) {
-
-    _changePhoto(numberPhoto++ );
-  }
-}
-
-function _showPrevImage() {
-  if (numberPhoto > 0) {
-
-    _changePhoto(numberPhoto-- );
-  }
-}
-
-function _changePhoto() {
-  currentPhoto.src = photos[numberPhoto];
-
-  imgPrev.classList.toggle(imgDisabledClassName, numberPhoto === 0);
-  imgNext.classList.toggle(imgDisabledClassName, numberPhoto === lengthArrayPhotos - 1);
-
-  previewId.textContent = numberPhoto + 1;
-}
-
-function _hideGallery() {
-  galleryContainer.classList.add('invisible');
-
-  imgPrev.removeEventListener('click', _showPrevImage);
-  imgNext.removeEventListener('click', _showNextImage);
-  btnCloseGallery.removeEventListener('click', _onCloseClick);
-
-  window.removeEventListener('keydown', _onDocumentKeyDown);
-}
-
-function getPhotos() {
-  for (var i = 0; i < imgArray.length; i++) {
-    photos.push(imgArray[i].getAttribute('src'));
-    imgArray[i].dataset.id = i;
-  }
-  lengthArrayPhotos = photos.length;
-
-  totalPreviews.textContent = lengthArrayPhotos;
-  currentPhoto = galleryPreview.appendChild(new Image(480, 480));
-}
-
-function showGallery(idPhoto) {
-  numberPhoto = idPhoto;
-  currentPhoto.src = photos[numberPhoto];
-  previewId.textContent = numberPhoto + 1;
-  galleryContainer.classList.remove('invisible');
-
-  imgPrev.addEventListener('click', _showPrevImage);
-  imgNext.addEventListener('click', _showNextImage);
-  btnCloseGallery.addEventListener('click', _onCloseClick);
-
-  window.addEventListener('keydown', _onDocumentKeyDown);
-}
-
-
-module.exports.getPhotos = getPhotos;
-module.exports.showGallery = showGallery;
+module.exports = new Gallery();
