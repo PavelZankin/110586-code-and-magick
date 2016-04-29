@@ -1,22 +1,22 @@
 'use strict';
 
-var galleryContainer = document.querySelector('.overlay-gallery');
-var galleryPreview = document.querySelector('.overlay-gallery-preview');
-var totalPreviews = galleryContainer.querySelector('.preview-number-total');
-var imgArray = document.querySelectorAll('.photogallery-image > img');
-var previewId = galleryContainer.querySelector('.preview-number-current');
-var imgPrev = galleryContainer.querySelector('.overlay-gallery-control-left');
-var imgNext = galleryContainer.querySelector('.overlay-gallery-control-right');
-var btnCloseGallery = galleryContainer.querySelector('.overlay-gallery-close');
-var imgDisabledClassName = 'overlay-gallery-control--disabled';
-var photos = [];
-var lengthArrayPhotos = photos.length;
-
-/** @constant {number} */
-var KEY_CODE_ESC = 27;
-
-
 function Gallery() {
+
+  var galleryContainer = document.querySelector('.overlay-gallery');
+  var galleryPreview = document.querySelector('.overlay-gallery-preview');
+  var totalPreviews = galleryContainer.querySelector('.preview-number-total');
+  var imgArray = document.querySelectorAll('.photogallery-image > img');
+  var previewId = galleryContainer.querySelector('.preview-number-current');
+  var imgPrev = galleryContainer.querySelector('.overlay-gallery-control-left');
+  var imgNext = galleryContainer.querySelector('.overlay-gallery-control-right');
+  var btnCloseGallery = galleryContainer.querySelector('.overlay-gallery-close');
+  var imgDisabledClassName = 'overlay-gallery-control--disabled';
+  var photogallery = document.querySelector('.photogallery');
+  var photos = [];
+  var lengthArrayPhotos = photos.length;
+
+  /** @constant {number} */
+  var KEY_CODE_ESC = 27;
 
   var that = this;
   this.photos = [];
@@ -89,12 +89,15 @@ function Gallery() {
     previewId.textContent = that.numberPhoto + 1;
   };
 
-  this.clickPhotogallery = function(evt) {
-    if (evt.target.dataset.id) {
-      evt.preventDefault();
-      that.showGallery(parseInt(evt.target.dataset.id, 10));
-    }
+  this.addClickHandler = function() {
+    photogallery.addEventListener('click', function(evt) {
+      if (evt.target.dataset.id) {
+        evt.preventDefault();
+        that.showGallery(parseInt(evt.target.dataset.id, 10));
+      }
+    });
   };
+
 
   this.getPhotos();
 
