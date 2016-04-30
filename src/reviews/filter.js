@@ -4,6 +4,9 @@
 
 var reviewsFilter = document.querySelector('.reviews-filter');
 var activeFilter = reviewsFilter.querySelector('input[name="reviews"][checked]');
+var filterStorage = 'filter';
+var defaultFilter = 'reviews-all';
+var lastFilterId;
 
 var load = require('./load');
 var pagination = require('./pagination');
@@ -56,6 +59,8 @@ function _getFilteredListRewiews(filter) {
 function setActiveFilter(filter) {
   module.exports.filteredReviews = _getFilteredListRewiews(filter);
   pagination.pageNumber = 0;
+  localStorage.setItem(filterStorage, filter);
+  reviewsFilter.elements['reviews'].value = defaultFilter;
 
   if (activeFilter) {
     activeFilter.removeAttribute('checked');
@@ -76,8 +81,18 @@ function setFiltrationEnabled() {
   });
 }
 
+function getLastFilterId() {
+  lastFilterId = localStorage.getItem(filterStorage);
+
+  if (lastFilterId === null) {
+    lastFilterId = activeFilter.id;
+  }
+
+  return lastFilterId;
+}
+
 module.exports.setFiltrationEnabled = setFiltrationEnabled;
 module.exports.setActiveFilter = setActiveFilter;
 module.exports.filteredReviews = [];
-module.exports.activeFilter = activeFilter;
+module.exports.getLastFilterId = getLastFilterId;
 
