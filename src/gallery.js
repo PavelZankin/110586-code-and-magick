@@ -21,9 +21,15 @@ function Gallery() {
   var that = this;
   this.photos = [];
 
+  this.hashPhotoValidate = /#photo\/(\S+)/;
+
+  this.createPhotoUrl = function(url) {
+    return '#photo/' + url;
+  };
+
   this.getPhotos = function() {
-    that.photos = Array.prototype.map.call(imgArray, function(image, i) {
-      image.dataset.id = i;
+    that.photos = Array.prototype.map.call(imgArray, function(image) {
+      image.dataset.gallery = true;
       return image.getAttribute('src');
     });
 
@@ -49,14 +55,14 @@ function Gallery() {
   this.showPrevImage = function() {
     if (that.numberPhoto > 0) {
 
-      that.changePhoto(that.numberPhoto-- );
+      that.savePhoto(that.photos[that.numberPhoto - 1]);
     }
   };
 
   this.showNextImage = function() {
     if (that.numberPhoto < lengthArrayPhotos - 1) {
 
-      that.changePhoto(that.numberPhoto++ );
+      that.savePhoto(that.photos[that.numberPhoto + 1]);
     }
   };
 
@@ -71,13 +77,32 @@ function Gallery() {
   };
 
   this.onCloseClick = function() {
-    that.hideGallery();
+    that.savePhoto();
   };
 
   this.onDocumentKeyDown = function(evt) {
     if (evt.keyCode === KEY_CODE_ESC) {
+
+      that.savePhoto();
+    }
+  };
+
+  this.savePhoto = function(photoUrl) {
+    var newUrl;
+
+    if (photoUrl) {
+
+      newUrl = that.createPhotoUrl(photoUrl);
+
+    } else {
+
+      newUrl = window.location.pathname;
+
       that.hideGallery();
     }
+
+    history.pushState('', document.title, newUrl);
+    window.dispatchEvent(new Event('hashchange'));
   };
 
   this.changePhoto = function() {
@@ -91,15 +116,31 @@ function Gallery() {
 
   this.addClickHandler = function() {
     photogallery.addEventListener('click', function(evt) {
-      if (evt.target.dataset.id) {
+      if (evt.target.dataset.gallery) {
         evt.preventDefault();
-        that.showGallery(parseInt(evt.target.dataset.id, 10));
+        that.savePhoto(evt.target.getAttribute('src'));
       }
     });
   };
 
+  this.hashCheck = function() {
+    var matches = that.hashPhotoValidate.exec(location.hash);
+
+    if (matches) {
+      var photoNumber = that.photos.indexOf(matches[1]);
+    }
+
+    if (photoNumber >= 0) {
+      that.showGallery(photoNumber);
+    } else {
+      that.hideGallery();
+    }
+  };
 
   this.getPhotos();
+  this.hashCheck();
+
+  window.addEventListener('hashchange', this.hashCheck);
 
 }
 
