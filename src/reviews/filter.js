@@ -60,6 +60,7 @@ function setActiveFilter(filter) {
   module.exports.filteredReviews = _getFilteredListRewiews(filter);
   pagination.pageNumber = 0;
   localStorage.setItem(filterStorage, filter);
+  defaultFilter = localStorage.getItem(filterStorage);
   reviewsFilter.elements['reviews'].value = defaultFilter;
 
   if (activeFilter) {
