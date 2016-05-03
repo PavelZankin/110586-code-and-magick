@@ -40,20 +40,20 @@ var Review = function(data, container) {
   this.data = data;
   this.element = _getElementReviews(this.data);
 
-  this.onQuizAnswerClick = function(evt) {
-    evt.preventDefault();
-    if (evt.target.classList.contains('review-quiz-answer')) {
-      evt.target.classList.add('review-quiz-answer-active');
-    }
-  };
-
-  this.remove = function() {
-    this.element.parentNode.removeChild(this.element);
-    this.element.removeEventListener('click', this.onQuizAnswerClick);
-  };
-
   this.element.addEventListener('click', this.onQuizAnswerClick);
   container.appendChild(this.element);
+};
+
+Review.prototype.onQuizAnswerClick = function(evt) {
+  evt.preventDefault();
+  if (evt.target.classList.contains('review-quiz-answer')) {
+    evt.target.classList.add('review-quiz-answer-active');
+  }
+};
+
+Review.prototype.remove = function() {
+  this.element.parentNode.removeChild(this.element);
+  this.element.removeEventListener('click', this.onQuizAnswerClick);
 };
 
 module.exports = Review;
