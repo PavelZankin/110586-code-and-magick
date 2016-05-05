@@ -7,10 +7,7 @@ var REQUEST_TIMEOUT = 10000;
 
 var reviewsBlock = document.querySelector('.reviews');
 
-function _removeLoadingAndAddFailure() {
-  reviewsBlock.classList.remove('reviews-list-loading');
-  reviewsBlock.classList.add('review-load-failure');
-}
+
 
 /**
 * @param {String} uri - path to file with JSON data
@@ -18,28 +15,35 @@ function _removeLoadingAndAddFailure() {
 */
 function loadReviews(uri, callback) {
   var xhr = new XMLHttpRequest();
+
   reviewsBlock.classList.add('reviews-list-loading');
 
-  xhr.onload = function(evt) {
+  xhr.addEventListener('load', onLoadReviews);
+
+  xhr.addEventListener('error', _removeLoadingAndAddFailure);
+
+  xhr.timiout = REQUEST_TIMEOUT;
+
+  xhr.addEventListener('timeout', _removeLoadingAndAddFailure);
+
+  xhr.open('GET', uri);
+  xhr.send();
+
+  function onLoadReviews(evt) {
     reviewsBlock.classList.remove('reviews-list-loading');
     var requestObj = evt.target;
     var response = requestObj.response;
     module.exports.reviews = JSON.parse(response);
     callback(module.exports.reviews);
-  };
+  }
 
-  xhr.onerror = function() {
-    _removeLoadingAndAddFailure();
-  };
-
-  xhr.timiout = REQUEST_TIMEOUT;
-  xhr.ontimeout = function() {
-    _removeLoadingAndAddFailure();
-  };
-
-  xhr.open('GET', uri);
-  xhr.send();
+  function _removeLoadingAndAddFailure() {
+    reviewsBlock.classList.remove('reviews-list-loading');
+    reviewsBlock.classList.add('review-load-failure');
+  }
 }
+
+
 
 /**
 * @param {HTMLElement} review
@@ -50,16 +54,9 @@ function loadImg(review, reviewImg, reviewImgSrc) {
   var avatarImage = new Image(124, 124);
   var imageLoadTimeout;
 
-  avatarImage.onload = function() {
-    clearTimeout(imageLoadTimeout);
-    reviewImg.src = reviewImgSrc;
-    reviewImg.width = avatarImage.width;
-    reviewImg.height = avatarImage.height;
-  };
+  avatarImage.addEventListener('load', onLoadImg);
 
-  avatarImage.onerror = function() {
-    review.classList.add('review-load-failure');
-  };
+  avatarImage.addEventListener('error', onErrorImg);
 
   imageLoadTimeout = setTimeout(function() {
     avatarImage.src = '';
@@ -67,6 +64,19 @@ function loadImg(review, reviewImg, reviewImgSrc) {
   }, REQUEST_TIMEOUT);
 
   avatarImage.src = reviewImgSrc;
+
+  function onLoadImg() {
+    clearTimeout(imageLoadTimeout);
+    reviewImg.src = reviewImgSrc;
+    reviewImg.width = avatarImage.width;
+    reviewImg.height = avatarImage.height;
+    removeEventListener('error', onErrorImg);
+  }
+
+  function onErrorImg() {
+    review.classList.add('review-load-failure');
+    removeEventListener('load', onLoadImg);
+  }
 }
 
 

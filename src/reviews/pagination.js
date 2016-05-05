@@ -15,10 +15,12 @@ var filter = require('./filter');
 var Review = require('./render-review');
 
 
-buttonMoreReviews.addEventListener('click', function() {
+buttonMoreReviews.addEventListener('click', onClickMoreReviews);
+
+function onClickMoreReviews() {
   module.exports.pageNumber++;
   renderReviews(false);
-});
+}
 
 function _isNextPageAvailable() {
   return (module.exports.pageNumber + 1) * PAGE_SIZE < filter.filteredReviews.length;

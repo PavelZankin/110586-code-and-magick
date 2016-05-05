@@ -10,6 +10,13 @@
   var labelName = document.querySelector('.review-fields-name');
   var labelText = document.querySelector('.review-fields-text');
   var labelBlock = document.querySelector('.review-fields');
+  var oldCheckedMark = formContainer.querySelector('input[name="review-mark"][checked]');
+  var newCheckedMark = oldCheckedMark;
+  var marks = formContainer.querySelectorAll('input[name="review-mark"]');
+  var button = document.querySelector('.review-submit');
+  var name = document.querySelector('#review-name');
+  var text = document.querySelector('#review-text');
+  var savedMark = browserCookies.get('mark');
 
   document.querySelector('.reviews-controls-new').addEventListener('click', function(evt) {
     evt.preventDefault();
@@ -21,31 +28,29 @@
     formContainer.classList.add('invisible');
   });
 
-  var marks = formContainer.querySelectorAll('input[name="review-mark"]');
   for (var i = 0; i < marks.length; i++) {
-    marks[i].onclick = function() {
-      var prev = formContainer.querySelector('input[name="review-mark"][checked]');
-      prev.removeAttribute('checked');
-      this.setAttribute('checked', null);
-      _validate(this);
-    };
+    marks[i].addEventListener('click', _onChangeChecked);
   }
 
-  var button = document.querySelector('.review-submit');
+  function _onChangeChecked() {
+    var prev = formContainer.querySelector('input[name="review-mark"][checked]');
+    prev.removeAttribute('checked');
+    this.setAttribute('checked', null);
+    _validate(this);
+  }
+
   button.disabled = true;
 
-  var name = document.querySelector('#review-name');
   name.value = browserCookies.get('name') || name.value;
   name.required = true;
-  name.oninput = function() {
-    _validate(null);
-  };
+  name.addEventListener('input', _onValidateNull);
 
-  var text = document.querySelector('#review-text');
   text.required = true;
-  text.oninput = function() {
+  text.addEventListener('input', _onValidateNull);
+
+  function _onValidateNull() {
     _validate(null);
-  };
+  }
 
   function _validate() {
     var mark = document.querySelector('input[name="review-mark"][checked]');
@@ -70,10 +75,7 @@
     labelText.hidden = !(isTextInvalid);
   }
 
-  var oldCheckedMark = formContainer.querySelector('input[name="review-mark"][checked]');
-  var newCheckedMark = oldCheckedMark;
 
-  var savedMark = browserCookies.get('mark');
   if (savedMark !== null) {
     oldCheckedMark.removeAttribute('checked');
     newCheckedMark = formContainer.querySelector('input[name="review-mark"][value="' + savedMark + '"]');

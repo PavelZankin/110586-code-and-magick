@@ -4,7 +4,9 @@ var browserCookies = require('browser-cookies');
 var form = document.querySelector('.overlay-container form');
 var utilities = require('../utilities');
 
-form.onsubmit = function(evt) {
+form.addEventListener('submit', _onSubmitForm);
+
+function _onSubmitForm(evt) {
   evt.preventDefault();
 
   var mark = document.querySelector('input[name="review-mark"][checked]');
@@ -16,6 +18,5 @@ form.onsubmit = function(evt) {
   browserCookies.set('mark', mark.value, formattedDateToExpire);
 
   form.submit();
-};
-
+}
 
