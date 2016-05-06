@@ -42,10 +42,10 @@ function _drawText(game, x, y, lineHeight, lines) {
 * @param {String} text
 */
 function drawTextBox(game, text) {
-  var x = game.state.objects[0].x; // левый край волшебника
-  var y = game.state.objects[0].y; // верхний край
-  var TextBoxhWidth = game.state.objects[0].width; // ширина волшебника
-  var TextBoxhHeight = game.state.objects[0].height; // высота
+  var leftSideObject = game.state.objects[0].x;
+  var topSiseObject = game.state.objects[0].y;
+  var objectWidth = game.state.objects[0].width;
+  var objectHeight = game.state.objects[0].height;
 
   var maxWidth = 290;
   var lineHeight = 30;
@@ -53,12 +53,12 @@ function drawTextBox(game, text) {
   var lines = _getTextLines(game, text, maxWidth);
 
   game.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  game.ctx.fillRect(x + TextBoxhWidth + 10, y + TextBoxhHeight - 190, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillRect(leftSideObject + objectWidth + 10, topSiseObject + objectHeight - 190, maxWidth + 10, lines.length * lineHeight + 15);
   game.ctx.fillStyle = '#FFFFFF';
-  game.ctx.fillRect(x + TextBoxhWidth, y + TextBoxhHeight - 200, maxWidth + 10, lines.length * lineHeight + 15);
+  game.ctx.fillRect(leftSideObject + objectWidth, topSiseObject + objectHeight - 200, maxWidth + 10, lines.length * lineHeight + 15);
   game.ctx.fillStyle = '#000000';
 
-  _drawText(game, x + TextBoxhWidth + 15, y + TextBoxhHeight - 170, lineHeight, lines);
+  _drawText(game, leftSideObject + objectWidth + 15, topSiseObject + objectHeight - 170, lineHeight, lines);
 }
 
 module.exports.drawTextBox = drawTextBox;

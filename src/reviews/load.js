@@ -35,11 +35,13 @@ function loadReviews(uri, callback) {
     var response = requestObj.response;
     module.exports.reviews = JSON.parse(response);
     callback(module.exports.reviews);
+    removeEventListener('error', _removeLoadingAndAddFailure);
   }
 
   function _removeLoadingAndAddFailure() {
     reviewsBlock.classList.remove('reviews-list-loading');
     reviewsBlock.classList.add('review-load-failure');
+    removeEventListener('load', onLoadReviews);
   }
 }
 
