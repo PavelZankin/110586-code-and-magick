@@ -18,15 +18,19 @@
   var text = document.querySelector('#review-text');
   var savedMark = browserCookies.get('mark');
 
-  document.querySelector('.reviews-controls-new').addEventListener('click', function(evt) {
-    evt.preventDefault();
-    formContainer.classList.remove('invisible');
-  });
+  document.querySelector('.reviews-controls-new').addEventListener('click', _formContainerShow);
 
-  document.querySelector('.review-form-close').addEventListener('click', function(evt) {
+  document.querySelector('.review-form-close').addEventListener('click', _formContainerHide);
+
+  function _formContainerHide(evt) {
     evt.preventDefault();
     formContainer.classList.add('invisible');
-  });
+  }
+
+  function _formContainerShow(evt) {
+    evt.preventDefault();
+    formContainer.classList.remove('invisible');
+  }
 
   for (var i = 0; i < marks.length; i++) {
     marks[i].addEventListener('click', _onChangeChecked);

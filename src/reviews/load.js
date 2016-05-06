@@ -36,6 +36,7 @@ function loadReviews(uri, callback) {
     module.exports.reviews = JSON.parse(response);
     callback(module.exports.reviews);
     removeEventListener('error', _removeLoadingAndAddFailure);
+    removeEventListener('timeout', _removeLoadingAndAddFailure);
   }
 
   function _removeLoadingAndAddFailure() {
