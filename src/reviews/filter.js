@@ -31,7 +31,7 @@ function _getFilteredListRewiews(filter) {
       break;
     case 'reviews-good':
       reviewsToFilter = reviewsToFilter.filter(function(mark) {
-        return mark.rating > parseInt(2, 10);
+        return parseInt(mark.rating, 10) > 2;
       });
       reviewsToFilter.sort(function(a, b) {
         return b.rating - a.rating;
@@ -39,7 +39,7 @@ function _getFilteredListRewiews(filter) {
       break;
     case 'reviews-bad':
       reviewsToFilter = reviewsToFilter.filter(function(mark) {
-        return mark.rating < parseInt(3, 10);
+        return parseInt(mark.rating, 10) < 3;
       });
       reviewsToFilter.sort(function(a, b) {
         return a.rating - b.rating;
